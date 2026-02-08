@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Websocket Echo Server</title>
+  </head>
+  <style>
+    .header {
+      width: 10em;
+      margin: 2px auto;
+    }
+    #container {
+      margin: 10px auto;
+      width: 20em;
+    }
+    #input-container {
+      background-color: #efefef;
+      border: 1px transparent;
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;
+      row-gap: 2px;
+    }
+    .btn {
+      cursor: pointer;
+      font-family: Georgia, "Times New Roman", Times, serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: #181818;
+      background-color: #e09540;
+      border: 1px transparent;
+    }
+    #input {
+      font-size: 16px;
+      resize: none;
+    }
+  </style>
+  <body>
+    <h1 class="header">Echo Server</h1>
+    <div id="container">
+      <div id="input-container">
+        <textarea id="input" placeholder="Type your message here..." rows="5">
+        </textarea>
+        <button id="sendBtn" class="btn" type="submit">Send</button>
+      </div>
+      <ul id="messages"></ul>
+    </div>
+  </body>
+  <script src="index.js"></script>
+</html>
