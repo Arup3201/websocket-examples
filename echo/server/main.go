@@ -41,19 +41,14 @@ func serve(w http.ResponseWriter, r *http.Request) {
 		conn.Close()
 	}()
 
+	log.Printf("[INFO] Client connected\n")
+
 	// read/write loop
 	for {
 		mt, msg, err = conn.ReadMessage()
 		if err != nil {
 			log.Printf("[ERROR] connection read: %s\n", err)
 			break
-		}
-
-		switch mt {
-		case websocket.BinaryMessage:
-			log.Printf("[INFO] binary message received...\n")
-		case websocket.TextMessage:
-			log.Printf("[INFO] text message recieved: %s", msg)
 		}
 
 		wr, err = conn.NextWriter(mt)
