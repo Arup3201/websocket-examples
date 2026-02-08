@@ -47,8 +47,12 @@ func serve(w http.ResponseWriter, r *http.Request) {
 	for {
 		mt, msg, err = conn.ReadMessage()
 		if err != nil {
-			log.Printf("[ERROR] connection read: %s\n", err)
-			break
+			if err.(*websocket.CloseError).Code == websocket.CloseGoingAway {
+				break
+			} else {
+				log.Printf("[ERROR] connection read: %s\n", err)
+				break
+			}
 		}
 
 		wr, err = conn.NextWriter(mt)
