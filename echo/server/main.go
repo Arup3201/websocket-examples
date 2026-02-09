@@ -5,13 +5,16 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/websocket"
 )
 
 const (
-	HOST = "localhost"
-	PORT = 8080
+	HOST          = "localhost"
+	PORT          = 8080
+	PING_INTERVAL = 2 * time.Second
+	PING_WAIT     = 50 * time.Second
 )
 
 var upgrader = websocket.Upgrader{
@@ -33,7 +36,7 @@ func serve(w http.ResponseWriter, r *http.Request) {
 
 	conn, err = upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		log.Printf("[ERROR] upgrader: %s", err)
+		log.Printf("[ERROR] upgrader: %s\n", err)
 		return
 	}
 	defer func() {
@@ -43,16 +46,37 @@ func serve(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("[INFO] Client connected\n")
 
+	go func() {
+		ticker := time.NewTicker(PING_INTERVAL)
+		defer ticker.Stop()
+
+		conn.SetPongHandler(func(appData string) error {
+			// PONG!
+			conn.SetReadDeadline(time.Now().Add(PING_WAIT))
+			return nil
+		})
+		for {
+			<-ticker.C
+
+			// PING!
+			err = conn.WriteMessage(websocket.PingMessage, []byte{})
+			if err != nil {
+				log.Printf("[ERROR] message ping: %s\n", err)
+				conn.WriteMessage(websocket.CloseMessage, nil)
+				break
+			}
+		}
+	}()
+
 	// read/write loop
 	for {
 		mt, msg, err = conn.ReadMessage()
 		if err != nil {
-			if err.(*websocket.CloseError).Code == websocket.CloseGoingAway {
-				break
-			} else {
+			if err.(*websocket.CloseError).Code != websocket.CloseGoingAway {
 				log.Printf("[ERROR] connection read: %s\n", err)
-				break
 			}
+			conn.WriteMessage(websocket.CloseMessage, nil)
+			break
 		}
 
 		wr, err = conn.NextWriter(mt)
@@ -70,7 +94,6 @@ func serve(w http.ResponseWriter, r *http.Request) {
 
 		if err = wr.Close(); err != nil {
 			log.Printf("[ERROR] connection write close: %s\n", err)
-			continue
 		}
 	}
 }
