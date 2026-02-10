@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"slices"
 	"time"
 
@@ -13,7 +14,7 @@ import (
 
 const (
 	HOST       = "0.0.0.0"
-	PORT       = "80"
+	PORT       = "8080"
 	WRITE_WAIT = 10 * time.Second
 )
 
@@ -113,10 +114,16 @@ func chat(w http.ResponseWriter, r *http.Request) {
 func main() {
 	http.HandleFunc("/ws", chat)
 
-	fmt.Printf("Server starting...\n")
-	fmt.Printf("Host: %s\nPort: %s\n", HOST, PORT)
+	var port string
+	port = os.Getenv("PORT")
+	if port == "" {
+		port = PORT
+	}
 
-	err := http.ListenAndServe(fmt.Sprintf("%s:%s", HOST, PORT), nil)
+	fmt.Printf("Server starting...\n")
+	fmt.Printf("Host: %s\nPort: %s\n", HOST, port)
+
+	err := http.ListenAndServe(fmt.Sprintf("%s:%s", HOST, port), nil)
 	if err != nil {
 		fmt.Printf("[ERROR] http listen and serve: %s\n", err)
 	}
