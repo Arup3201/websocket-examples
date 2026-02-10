@@ -20,9 +20,14 @@
     messagesBox.scrollTop = messagesBox.scrollHeight;
   }
 
-  const ws = new WebSocket("ws://localhost:8080/ws");
+  const ws = new WebSocket("wss://websocket-examples-86o9.onrender.com/ws");
   ws.onopen = () => {
-    console.log("Websocket connection established");
+    const timeout = setTimeout(() => {
+      if (ws.readyState === 1) {
+        console.log("Websocket connection established");
+        clearTimeout(timeout);
+      }
+    }, 10);
   };
   ws.onerror = (ev) => {
     console.log("Websocket error: ", ev);
