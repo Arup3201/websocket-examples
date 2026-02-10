@@ -11,8 +11,8 @@ import (
 )
 
 const (
-	HOST          = "localhost"
-	PORT          = 8080
+	HOST          = "0.0.0.0"
+	PORT          = "80"
 	PING_INTERVAL = 2 * time.Second
 	PING_WAIT     = 50 * time.Second
 )
@@ -102,8 +102,8 @@ func main() {
 	http.HandleFunc("/ws", serve)
 
 	fmt.Printf("Server starting...\n")
-	fmt.Printf("Host: %s\nPort: %d\n", HOST, PORT)
-	err := http.ListenAndServe(fmt.Sprintf("%s:%d", HOST, PORT), nil)
+	fmt.Printf("Host: %s\nPort: %s\n", HOST, PORT)
+	err := http.ListenAndServe(fmt.Sprintf("%s:%s", HOST, PORT), nil)
 	if err != nil {
 		log.Fatalf("http listen and serve: %s", err)
 	}

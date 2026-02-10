@@ -12,8 +12,8 @@ import (
 )
 
 const (
-	HOST       = "localhost"
-	PORT       = "8080"
+	HOST       = "0.0.0.0"
+	PORT       = "80"
 	WRITE_WAIT = 10 * time.Second
 )
 
@@ -112,6 +112,10 @@ func chat(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	http.HandleFunc("/ws", chat)
+
+	fmt.Printf("Server starting...\n")
+	fmt.Printf("Host: %s\nPort: %s\n", HOST, PORT)
+
 	err := http.ListenAndServe(fmt.Sprintf("%s:%s", HOST, PORT), nil)
 	if err != nil {
 		fmt.Printf("[ERROR] http listen and serve: %s\n", err)
