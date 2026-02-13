@@ -10,6 +10,62 @@ body {
     padding: 20px;
 }
 
+.name-screen {
+    max-width: 400px;
+    margin: 100px auto;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 40px;
+    text-align: center;
+}
+
+.name-screen h1 {
+    color: #4a5568;
+    margin-bottom: 10px;
+    font-size: 24px;
+}
+
+.name-screen p {
+    color: #666;
+    margin-bottom: 30px;
+    font-size: 14px;
+}
+
+.name-screen input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.name-screen input:focus {
+    outline: none;
+    border-color: #4299e1;
+}
+
+.name-screen button {
+    width: 100%;
+    padding: 12px;
+    background-color: #4299e1;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.name-screen button:hover {
+    background-color: #3182ce;
+}
+
+.hidden {
+    display: none;
+}
+
 .chat-container {
     max-width: 600px;
     margin: 0 auto;

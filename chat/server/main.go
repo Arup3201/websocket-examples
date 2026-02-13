@@ -27,8 +27,9 @@ var (
 )
 
 type Client struct {
-	Id   string
-	Conn *websocket.Conn
+	Id       string
+	Username string
+	Conn     *websocket.Conn
 }
 
 var clients = []*Client{}
@@ -36,6 +37,13 @@ var clients = []*Client{}
 func chat(w http.ResponseWriter, r *http.Request) {
 	var err error
 	var conn *websocket.Conn
+	var username string
+
+	username = r.URL.Query().Get("name")
+	if username == "" {
+		http.Error(w, "username is required", http.StatusBadRequest)
+		return
+	}
 
 	conn, err = upgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -45,8 +53,9 @@ func chat(w http.ResponseWriter, r *http.Request) {
 
 	id := uuid.NewString()
 	clients = append(clients, &Client{
-		Id:   id,
-		Conn: conn,
+		Id:       id,
+		Username: username,
+		Conn:     conn,
 	})
 
 	fmt.Printf("[INFO] Client %s connected\n", id)
